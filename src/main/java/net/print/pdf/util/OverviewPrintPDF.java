@@ -62,49 +62,52 @@ public class OverviewPrintPDF implements PrintPDF {
 	}
 
 	private void handle() throws Exception {
-		//检查overview参数是否符合业务逻辑,如果不符合则抛出错误
 		checkOverviewParam();
 
-		//创建
 		String createPath = outFolderPath + "create.pdf";
 		PDFUtils.createNotPagingPDF(url, createPath);
 
-		//缩放
 		String zoomPath = outFolderPath + "zoom.pdf";
 		PDFUtils.zoomPDF(createPath, zoomPath, printType, scale, printWidth);
 
-		//分页
 		String pagingPath = outFolderPath + "paging.pdf";
 		PDFUtils.pagingPDF(zoomPath, pagingPath, printType, printWidth, printHeight);
 
-		//添加页尾
 		String footPath = outFolderPath + "foot.pdf";
 		PDFUtils.addFooterToPdf(pagingPath, footPath, footer);
 	}
 
-	/** 检查overview参数是否符合业务逻辑,如果不符合则抛出错误 **/
+	/** 检查overview参数是否符合业务逻辑 **/
 	private void checkOverviewParam() throws Exception {
-		//URL不能为空
 		if (url == null) {
 			throw new Exception("[OverviewPrintPDF.checkOverviewParam] Cause by: url is null !");
 		}
-		//文件夹路径不能为空
 		if (outFolderPath == null) {
 			throw new Exception("[OverviewPrintPDF.checkOverviewParam] Cause by: outFolderPath is null !");
 		}
-		//宽度不能为空而且要大于0
 		if (printWidth == null || printWidth <= 0) {
 			throw new Exception("[OverviewPrintPDF.checkOverviewParam] Cause by: printWidth is null or printWidth<=0 !");
 		}
-		//高度不能为空而且要大于0
 		if (printHeight == null || printHeight <= 0) {
 			throw new Exception("[OverviewPrintPDF.checkOverviewParam] Cause by: printHeight is null or printHeight<=0 !");
 		}
-		//当printType=0 , scale不能为空而且要在 0%-200%的区间内
-		boolean checkScale = scale == null || scale < 0 || scale > 2;
-		if (printType == PRINT_TYPE_PERCENTAGE && checkScale) {
-			throw new Exception("[OverviewPrintPDF.checkOverviewParam] Cause by:when PrintType=0, Scale is null or it not in 0%-200% !");
+		if (checkScale()) {
+			String msg = "[OverviewPrintPDF.checkOverviewParam] Cause by:Scale is null or it not in 0%-200%,When PrintType=0 !";
+			throw new Exception(msg);
 		}
 	}
 
+	/**
+	 * 检查scale是否在0%-200%范围内,当打印类型为百分比的时候
+	 * 
+	 * @return true:不在 / false:在
+	 */
+	private boolean checkScale() {
+		if (printType == PRINT_TYPE_PERCENTAGE) {
+			if (scale == null || scale < 0 || scale > 2) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

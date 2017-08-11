@@ -45,40 +45,34 @@ public class DalPrintPDF implements PrintPDF {
 	}
 
 	private void handle() throws Exception {
-		//检查参数是否符合业务逻辑
 		checkParam();
 
-		//创建
 		String createPath = outFolderPath + "create.pdf";
 		PDFUtils.createPagingPDFByFormat(url, createPath, format);
 
-		//添加页尾
 		String footPath = outFolderPath + "foot.pdf";
 		PDFUtils.addFooterToPdf(createPath, footPath, footer);
 	}
 
 	/** 检查参数是否符合业务逻辑,如果不符合则抛出错误 **/
 	private void checkParam() throws Exception {
-		//URL不能为空
 		if (url == null) {
 			throw new Exception("[DalPrintPDF.checkParam] Cause by: url is null !");
 		}
-		//文件夹路径不能为空
 		if (outFolderPath == null) {
 			throw new Exception("[DalPrintPDF.checkParam] Cause by: outFolderPath is null !");
 		}
-		//检查打印格式是否正确
-		checkFormat(format);
+		checkPrintFormat(format);
 	}
 
 	/** 检查打印格式是否正确 **/
-	private static void checkFormat(String format) throws Exception {
+	private static void checkPrintFormat(String format) throws Exception {
 		String[] arr = { "A3", "A4", "A5", "Legal", "Letter", "Tabloid" };
 		for (String type : arr) {
 			if (type.equals(format)) {
 				return;
 			}
 		}
-		throw new Exception("[DalPrintPDF.checkFormat] Cause by:printFormat=" + format + ",  printFormat must in (A3,A4,A5,Legal,Letter,Tabloid) !");
+		throw new Exception("[DalPrintPDF.checkPrintFormat] Cause by:printFormat=" + format + ",  printFormat must in (A3,A4,A5,Legal,Letter,Tabloid) !");
 	}
 }
