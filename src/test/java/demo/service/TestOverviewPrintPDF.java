@@ -1,8 +1,8 @@
 package demo.service;
 
-import net.print.pdf.dto.OverviewPrintPDF;
-import net.print.pdf.util.PDFServiceUtils;
+import net.print.pdf.util.OverviewPrintPDF;
 import net.print.pdf.util.PDFUtils;
+import net.print.pdf.util.PrintPDF;
 
 /**
  * 测试Overview业务的打印功能
@@ -20,20 +20,19 @@ public class TestOverviewPrintPDF {
 
 	/** 测试overview **/
 	private static void overviewPrintPDF() {
-		OverviewPrintPDF param = getOverviewParam();//组装参数
-		PDFServiceUtils.overview(param);//打印
+		PrintPDF pdf = getOverviewParam();//组装参数
+		pdf.print();
 	}
 
 	/** 组装参数 **/
-	private static OverviewPrintPDF getOverviewParam() {
-		OverviewPrintPDF param = new OverviewPrintPDF();
-		param.setUrl("http://news.baidu.com");
-		param.setPrintType(0);
-		param.setOutFolderPath("C:/Users/ann/Desktop/testPDF/");
-		param.setScale(0.5f);
-		param.setPrintWidth(300f);
-		param.setPrintHeight(300f);
-		param.setFooter("Printed by David, 2017-08-09");
-		return param;
+	private static PrintPDF getOverviewParam() {
+		String url = "http://news.baidu.com";
+		String outFolderPath = "C:/Users/ann/Desktop/testPDF/";
+		Float printWidth = 300f;
+		Float printHeight = 300f;
+		int printType = 0;
+		Float scale = 0.5f;
+		String footer = "Printed by David, 2017-08-09";
+		return new OverviewPrintPDF(url, outFolderPath, printWidth, printHeight, printType, scale, footer);
 	}
 }
